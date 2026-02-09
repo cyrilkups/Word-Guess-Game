@@ -16,10 +16,18 @@
   <main class="app-shell">
     <header class="top-bar">
       <div>
-        <p class="eyebrow">Material 3 Inspired</p>
         <h1>Word Quest</h1>
+        <p class="subhead">Think fast, protect your lives, and build your streak.</p>
       </div>
-      <button id="restartBtn" class="btn btn-tonal" type="button">Restart</button>
+      <div class="header-actions">
+        <label class="mode-select-label" for="modeSelect">Mode</label>
+        <select id="modeSelect" class="mode-select">
+          <option value="easy">Easy</option>
+          <option value="normal" selected>Normal</option>
+          <option value="hard">Hard</option>
+        </select>
+        <button id="restartBtn" class="btn btn-tonal" type="button">New Run</button>
+      </div>
     </header>
 
     <section class="status-grid">
@@ -35,6 +43,18 @@
         <p class="label">Tries Left</p>
         <p id="triesValue" class="value">0</p>
       </article>
+      <article class="status-card">
+        <p class="label">Lives</p>
+        <p id="livesValue" class="value">0</p>
+      </article>
+      <article class="status-card">
+        <p class="label">Streak</p>
+        <p id="streakValue" class="value">0</p>
+      </article>
+      <article class="status-card">
+        <p class="label">Best Score</p>
+        <p id="bestScoreValue" class="value">0</p>
+      </article>
     </section>
 
     <section class="card">
@@ -45,6 +65,13 @@
       <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="game progress">
         <div id="progressFill" class="progress-fill"></div>
       </div>
+      <div class="timer-row">
+        <p class="label">Timer</p>
+        <p id="timerText" class="small-value">0s</p>
+      </div>
+      <div class="timer-track" aria-hidden="true">
+        <div id="timerFill" class="timer-fill"></div>
+      </div>
       <div id="levelChips" class="chips"></div>
     </section>
 
@@ -52,9 +79,12 @@
       <p id="levelDescription" class="question-meta"></p>
       <h2 id="clueText" class="clue"></h2>
       <p id="hintText" class="hint hidden"></p>
+      <p id="assistText" class="assist hidden"></p>
 
       <div class="actions-inline">
         <button id="hintBtn" class="btn btn-text" type="button">Show Hint</button>
+        <button id="revealBtn" class="btn btn-text" type="button">Reveal Letter</button>
+        <button id="skipBtn" class="btn btn-text" type="button">Skip</button>
       </div>
 
       <form id="answerForm" class="answer-form">
@@ -66,6 +96,7 @@
       </form>
 
       <p id="feedback" class="feedback" aria-live="polite"></p>
+      <p id="metaInfo" class="meta-info">Skips: 0 | Reveals: 0 | Best Streak: 0</p>
     </section>
   </main>
 
