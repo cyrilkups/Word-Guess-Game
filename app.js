@@ -1,67 +1,157 @@
 const levels = [
   {
     name: "Level 1 - Starter",
-    description: "Warm-up round with clear clues.",
+    description: "Easy brain warmups with richer clues.",
     basePoints: 10,
     questions: [
       {
-        clue: "A naturally occurring inorganic solid with a definite chemical composition.",
+        clue: "I am born deep in earth, never planted, and sometimes sparkle in silence. What am I?",
         answer: "mineral",
-        hint: "Starts with m and ends with l.",
+        hints: [
+          "Geology studies me.",
+          "You can find me in rocks and ores.",
+          "I start with m and end with l.",
+        ],
       },
       {
-        clue: "Rocks formed from cooled molten material.",
+        clue: "I rise from melted stone that cools and hardens into ancient strength.",
         answer: "igneous",
-        hint: "Starts with i and has 7 letters.",
+        hints: [
+          "I am a type of rock.",
+          "I form from magma or lava.",
+          "I start with i and have 7 letters.",
+        ],
       },
       {
-        clue: "Small particles that settle at the bottom of water bodies.",
+        clue: "I drift, I settle, I layer; over years I become history under your feet.",
         answer: "sediment",
-        hint: "Starts with s and ends with t.",
+        hints: [
+          "Rivers carry me.",
+          "I often gather at the bottom of water.",
+          "I start with s and end with t.",
+        ],
+      },
+      {
+        clue: "I am a memory of life turned to stone, older than stories.",
+        answer: "fossil",
+        hints: [
+          "Dinosaurs are often known through me.",
+          "I preserve traces of ancient organisms.",
+          "I start with f and end with l.",
+        ],
+      },
+      {
+        clue: "Wind and water carve me slowly; I become a giant path between cliffs.",
+        answer: "canyon",
+        hints: [
+          "I am a deep valley.",
+          "The Grand one is world famous.",
+          "I start with c and end with n.",
+        ],
       },
     ],
   },
   {
     name: "Level 2 - Puzzle",
-    description: "Sharper clues, less room for mistakes.",
+    description: "Intriguing statements that require sharper thinking.",
     basePoints: 14,
     questions: [
       {
-        clue: "I am a force that pulls objects toward each other.",
+        clue: "I am invisible, always pulling, and no one escapes my reach.",
         answer: "gravity",
-        hint: "g......y",
+        hints: [
+          "I keep planets in orbit.",
+          "When you jump, I bring you back down.",
+          "g......y",
+        ],
       },
       {
-        clue: "This 4-letter word reads the same forward and backward.",
+        clue: "I look the same forward and backward, and I split the day in two.",
         answer: "noon",
-        hint: "n..n",
+        hints: [
+          "I happen at midday.",
+          "I am a palindrome.",
+          "n..n",
+        ],
       },
       {
-        clue: "Drop me and I crack, smile at me and I smile back.",
+        clue: "Break me with a fall, wake me with a glance, and I always return your face.",
         answer: "mirror",
-        hint: "m....r",
+        hints: [
+          "I live on walls and in bathrooms.",
+          "I reflect light.",
+          "m....r",
+        ],
+      },
+      {
+        clue: "I follow you in light, disappear in darkness, and never make a sound.",
+        answer: "shadow",
+        hints: [
+          "I copy your shape.",
+          "I am made by blocked light.",
+          "s.....w",
+        ],
+      },
+      {
+        clue: "You speak to me in mountains and I answer with your own voice.",
+        answer: "echo",
+        hints: [
+          "I repeat what you say.",
+          "You hear me in caves and valleys.",
+          "e..o",
+        ],
       },
     ],
   },
   {
     name: "Level 3 - Master",
-    description: "Final riddles. Stay calm and move fast.",
+    description: "Deeper riddles. Think before every move.",
     basePoints: 20,
     questions: [
       {
-        clue: "If I drink, I die. If I eat, I am fine.",
+        clue: "Feed me and I live; drown me and I vanish instantly.",
         answer: "fire",
-        hint: "4 letters, common element.",
+        hints: [
+          "I need oxygen.",
+          "I give warmth and light.",
+          "4 letters, starts with f.",
+        ],
       },
       {
-        clue: "I am so fragile that saying my name can break me.",
+        clue: "Say my name and I am gone.",
         answer: "silence",
-        hint: "Starts with s, ends with e.",
+        hints: [
+          "Libraries ask for me.",
+          "I am the absence of noise.",
+          "I start with s and end with e.",
+        ],
       },
       {
-        clue: "It runs but never walks, has a mouth but never eats.",
+        clue: "I run forever but never walk. I have a mouth but never eat.",
         answer: "river",
-        hint: "r...r",
+        hints: [
+          "I can be calm or wild.",
+          "I flow toward seas and lakes.",
+          "r...r",
+        ],
+      },
+      {
+        clue: "I heal all wounds, steal every moment, and can never be paused in real life.",
+        answer: "time",
+        hints: [
+          "Clocks measure me.",
+          "Everyone has the same 24 hours per day.",
+          "t..e",
+        ],
+      },
+      {
+        clue: "I visit while you sleep, build impossible worlds, and disappear by morning.",
+        answer: "dream",
+        hints: [
+          "I happen in your mind at night.",
+          "Nightmares are my darker form.",
+          "d...m",
+        ],
       },
     ],
   },
@@ -117,6 +207,7 @@ const hintText = document.getElementById("hintText");
 const assistText = document.getElementById("assistText");
 const metaInfo = document.getElementById("metaInfo");
 const hintBtn = document.getElementById("hintBtn");
+const moreClueBtn = document.getElementById("moreClueBtn");
 const revealBtn = document.getElementById("revealBtn");
 const skipBtn = document.getElementById("skipBtn");
 const answerForm = document.getElementById("answerForm");
@@ -153,8 +244,10 @@ let bestStreakThisRun = 0;
 let livesLeft = gameMode.lives;
 let skipsLeft = gameMode.skips;
 let revealsLeft = gameMode.reveals;
+let cluesUsed = 0;
 let completedQuestions = 0;
-let hintShown = false;
+let revealedHintCount = 0;
+let hintsVisible = false;
 let isLocked = false;
 let timerId = null;
 let timeLeft = gameMode.timeLimit;
@@ -172,6 +265,37 @@ function readStoredInt(key) {
 
 function writeStoredInt(key, value) {
   window.localStorage.setItem(key, String(value));
+}
+
+function getHintsForQuestion(question) {
+  if (Array.isArray(question.hints) && question.hints.length > 0) {
+    return question.hints;
+  }
+  if (typeof question.hint === "string" && question.hint.trim()) {
+    return [question.hint];
+  }
+  return [];
+}
+
+function renderHintPanel() {
+  const question = getCurrentQuestion();
+  const hints = getHintsForQuestion(question);
+
+  if (!hintsVisible || revealedHintCount === 0 || hints.length === 0) {
+    hintText.classList.add("hidden");
+    hintText.textContent = "";
+    hintBtn.textContent = hints.length > 0 ? "Show Hint" : "No Hints";
+    moreClueBtn.textContent = "More Clue";
+    return;
+  }
+
+  const activeHints = hints.slice(0, revealedHintCount);
+  const compiled = activeHints.map((hint, idx) => `${idx + 1}. ${hint}`).join("  ");
+  hintText.textContent = `Clues: ${compiled}`;
+  hintText.classList.remove("hidden");
+  hintBtn.textContent = "Hide Hints";
+  moreClueBtn.textContent =
+    revealedHintCount >= hints.length ? "All Clues Used" : "More Clue";
 }
 
 function shuffleQuestions() {
@@ -199,8 +323,10 @@ function resetGame() {
   livesLeft = gameMode.lives;
   skipsLeft = gameMode.skips;
   revealsLeft = gameMode.reveals;
+  cluesUsed = 0;
   completedQuestions = 0;
-  hintShown = false;
+  revealedHintCount = 0;
+  hintsVisible = false;
   isLocked = false;
   timeLeft = gameMode.timeLimit;
   feedback.textContent = "";
@@ -258,12 +384,16 @@ function updateTimerUI() {
 
 function updateMetaInfo() {
   metaInfo.textContent =
-    `Mode: ${gameMode.label} | Skips: ${skipsLeft} | Reveals: ${revealsLeft} | Best Streak: ${bestStreakAllTime}`;
+    `Mode: ${gameMode.label} | Skips: ${skipsLeft} | Reveals: ${revealsLeft} | Clues Used: ${cluesUsed} | Best Streak: ${bestStreakAllTime}`;
 }
 
-function updateUI() {
+function updateUI(options = {}) {
+  const { preserveInput = false } = options;
   const level = getCurrentLevel();
   const question = getCurrentQuestion();
+  const hints = getHintsForQuestion(question);
+  const moreCluesAvailable = revealedHintCount < hints.length;
+
   levelLabel.textContent = level.name;
   scoreValue.textContent = String(score);
   triesValue.textContent = String(attemptsLeft);
@@ -272,14 +402,18 @@ function updateUI() {
   bestScoreValue.textContent = String(bestScore);
   levelDescription.textContent = level.description;
   clueText.textContent = question.clue;
-  hintText.textContent = `Hint: ${question.hint}`;
-  hintText.classList.toggle("hidden", !hintShown);
-  hintBtn.textContent = hintShown ? "Hide Hint" : "Show Hint";
+
+  renderHintPanel();
+
   revealBtn.disabled = isLocked || revealsLeft <= 0;
   skipBtn.disabled = isLocked || skipsLeft <= 0;
-  answerInput.value = "";
+  hintBtn.disabled = isLocked || hints.length === 0;
+  moreClueBtn.disabled = isLocked || hints.length === 0 || !moreCluesAvailable;
+
+  if (!preserveInput) {
+    answerInput.value = "";
+  }
   answerInput.disabled = isLocked;
-  hintBtn.disabled = isLocked;
   updateProgress();
   updateTimerUI();
   updateMetaInfo();
@@ -289,9 +423,10 @@ function updateUI() {
 function lockInput(locked) {
   isLocked = locked;
   answerInput.disabled = locked;
-  hintBtn.disabled = locked;
   revealBtn.disabled = locked || revealsLeft <= 0;
   skipBtn.disabled = locked || skipsLeft <= 0;
+  hintBtn.disabled = locked;
+  moreClueBtn.disabled = locked;
 }
 
 function startTimer() {
@@ -364,7 +499,8 @@ function goToNextQuestion() {
   if (!isEndOfLevel) {
     currentQuestionIndex += 1;
     attemptsLeft = gameMode.attempts;
-    hintShown = false;
+    revealedHintCount = 0;
+    hintsVisible = false;
     assistText.classList.add("hidden");
     assistText.textContent = "";
     lockInput(false);
@@ -458,7 +594,7 @@ function revealLetter() {
   assistText.textContent = `Reveal: first letter "${first}", last letter "${last}".`;
   assistText.classList.remove("hidden");
   score = Math.max(0, score - 1);
-  updateUI();
+  updateUI({ preserveInput: true });
 }
 
 function skipQuestion() {
@@ -471,6 +607,18 @@ function skipQuestion() {
   setFeedback(`Skipped. Answer was "${getCurrentQuestion().answer}".`, "error");
   updateUI();
   window.setTimeout(goToNextQuestion, 700);
+}
+
+function unlockNextClue() {
+  if (isLocked) return;
+  const hints = getHintsForQuestion(getCurrentQuestion());
+  if (revealedHintCount >= hints.length || hints.length === 0) return;
+  revealedHintCount += 1;
+  hintsVisible = true;
+  cluesUsed += 1;
+  score = Math.max(0, score - 1);
+  setFeedback(`Clue ${revealedHintCount}/${hints.length} unlocked (-1 point).`, "success");
+  updateUI({ preserveInput: true });
 }
 
 answerForm.addEventListener("submit", (event) => {
@@ -486,11 +634,27 @@ answerForm.addEventListener("submit", (event) => {
 });
 
 hintBtn.addEventListener("click", () => {
-  hintShown = !hintShown;
-  hintText.classList.toggle("hidden", !hintShown);
-  hintBtn.textContent = hintShown ? "Hide Hint" : "Show Hint";
+  if (isLocked) return;
+  const hints = getHintsForQuestion(getCurrentQuestion());
+  if (hints.length === 0) return;
+
+  if (hintsVisible) {
+    hintsVisible = false;
+    updateUI({ preserveInput: true });
+    return;
+  }
+
+  if (revealedHintCount === 0) {
+    unlockNextClue();
+    return;
+  }
+
+  hintsVisible = true;
+  setFeedback("Hints shown.", "success");
+  updateUI({ preserveInput: true });
 });
 
+moreClueBtn.addEventListener("click", unlockNextClue);
 revealBtn.addEventListener("click", revealLetter);
 skipBtn.addEventListener("click", skipQuestion);
 
@@ -499,7 +663,8 @@ nextLevelBtn.addEventListener("click", () => {
   currentLevelIndex += 1;
   currentQuestionIndex = 0;
   attemptsLeft = gameMode.attempts;
-  hintShown = false;
+  revealedHintCount = 0;
+  hintsVisible = false;
   assistText.classList.add("hidden");
   assistText.textContent = "";
   lockInput(false);
