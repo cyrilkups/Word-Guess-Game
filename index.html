@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Quest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-orb bg-orb-a"></div>
+  <div class="bg-orb bg-orb-b"></div>
+
+  <main class="app-shell">
+    <header class="top-bar">
+      <div>
+        <p class="eyebrow">Material 3 Inspired</p>
+        <h1>Word Quest</h1>
+      </div>
+      <button id="restartBtn" class="btn btn-tonal" type="button">Restart</button>
+    </header>
+
+    <section class="status-grid">
+      <article class="status-card">
+        <p class="label">Level</p>
+        <p id="levelLabel" class="value">Level 1</p>
+      </article>
+      <article class="status-card" id="scoreCard">
+        <p class="label">Score</p>
+        <p id="scoreValue" class="value">0</p>
+      </article>
+      <article class="status-card">
+        <p class="label">Tries Left</p>
+        <p id="triesValue" class="value">0</p>
+      </article>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <p class="label">Journey Progress</p>
+        <p id="progressText" class="small-value">0%</p>
+      </div>
+      <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="game progress">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+      <div id="levelChips" class="chips"></div>
+    </section>
+
+    <section class="card question-card">
+      <p id="levelDescription" class="question-meta"></p>
+      <h2 id="clueText" class="clue"></h2>
+      <p id="hintText" class="hint hidden"></p>
+
+      <div class="actions-inline">
+        <button id="hintBtn" class="btn btn-text" type="button">Show Hint</button>
+      </div>
+
+      <form id="answerForm" class="answer-form">
+        <label for="answerInput">Your Guess</label>
+        <div class="input-row">
+          <input id="answerInput" name="answer" type="text" autocomplete="off" required>
+          <button class="btn btn-filled" type="submit">Submit</button>
+        </div>
+      </form>
+
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <dialog id="levelDialog" class="celebration-dialog">
+    <h3 id="levelDialogTitle"></h3>
+    <p id="levelDialogBody"></p>
+    <button id="nextLevelBtn" class="btn btn-filled" type="button">Continue</button>
+  </dialog>
+
+  <dialog id="gameDialog" class="celebration-dialog">
+    <h3 id="gameDialogTitle">You finished Word Quest!</h3>
+    <p id="gameDialogBody"></p>
+    <button id="playAgainBtn" class="btn btn-filled" type="button">Play Again</button>
+  </dialog>
+
+  <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
